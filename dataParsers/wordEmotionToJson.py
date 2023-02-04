@@ -17,6 +17,6 @@ for line in fileLines:
     word, emotion = line.strip().split(",")
     emotionMap[emotion].append(word)
 
-jsonFile = open("emotionalWords.json", "w")
+jsonFile = open("./jsonFiles/emotionalWords.json", "w")
 json.dump(emotionMap, jsonFile)
 jsonFile.close()

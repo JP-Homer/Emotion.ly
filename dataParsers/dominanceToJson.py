@@ -16,6 +16,6 @@ for line in fileLines:
     #each space between data is a special Large Space character
     arousalMap[line[:-19]] = float(line[-11:-6].strip())
 
-jsonFile = open("arousalMap.json", "w")
+jsonFile = open("./jsonFiles/arousalMap.json", "w")
 json.dump(arousalMap, jsonFile)
 jsonFile.close()
