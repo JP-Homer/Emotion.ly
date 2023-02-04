@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Flex,
-  Text,
+  Box,
   Button,
   Slider,
   SliderTrack,
@@ -13,21 +13,32 @@ import {
   AlertTitle,
   AlertDescription,
 } from '@chakra-ui/react';
+import { FaAngry } from 'react-icons/fa';
 
 import { AutoResizeTextarea } from './ResizableTextarea';
 
+const BASE_INFO = {
+  color: 'teal',
+  words: {
+    irate: 'Feeling or showing extreme anger',
+    mad: 'Roused to anger',
+  },
+};
+
 function App() {
   const [sliderValue, setSliderValue] = useState(50);
+  const [scale, setScale] = useState(BASE_INFO);
 
   const labelStyles = {
     mt: '2',
     ml: '-2.5',
-    fontSize: 'sm',
+    fontSize: 'lg',
   };
 
   const request = e => {
     e.preventDefault();
     console.log('Request had been sent');
+    console.log(scale);
   };
 
   return (
@@ -50,29 +61,29 @@ function App() {
         Find adjectives
       </Button>
 
-      <Flex w="100%" mt="10">
+      <Flex w="100%" mt="16" px="10">
         <Slider
           aria-label="slider-ex-6"
           onChange={val => setSliderValue(val)}
-          colorScheme="teal"
+          colorScheme={scale.color}
           step="5"
         >
-          <SliderMark value={25} {...labelStyles}>
-            25%
+          <SliderMark value={10} {...labelStyles} mt={5}>
+            Less Intense
           </SliderMark>
-          <SliderMark value={50} {...labelStyles}>
-            50%
+          <SliderMark value={{ base: 48, md: 46 }} {...labelStyles} mt={5}>
+            Your Word
           </SliderMark>
-          <SliderMark value={75} {...labelStyles}>
-            75%
+          <SliderMark value={75} {...labelStyles} mt={5}>
+            More Intense
           </SliderMark>
           <SliderMark
             value={sliderValue}
             textAlign="center"
-            bg="teal"
+            bg={scale.color}
             color="white"
-            mt="-10"
-            ml="-5"
+            mt="-12"
+            ml="-6"
             w="12"
           >
             {sliderValue}%
@@ -80,7 +91,15 @@ function App() {
           <SliderTrack>
             <SliderFilledTrack />
           </SliderTrack>
-          <SliderThumb />
+          <SliderThumb
+            position="relative"
+            right={-10}
+            boxSize={10}
+            borderColor={scale.color}
+            ml={-5}
+          >
+            <Box color={scale.color} as={FaAngry} />
+          </SliderThumb>
         </Slider>
       </Flex>
     </Flex>
