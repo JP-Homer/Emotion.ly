@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Flex,
   Text,
-  Textarea,
   Button,
   Slider,
   SliderTrack,
-  SliderFileldTrack,
+  SliderFilledTrack,
   SliderThumb,
   SliderMark,
   Alert,
@@ -18,6 +17,19 @@ import {
 import { AutoResizeTextarea } from './ResizableTextarea';
 
 function App() {
+  const [sliderValue, setSliderValue] = useState(50);
+
+  const labelStyles = {
+    mt: '2',
+    ml: '-2.5',
+    fontSize: 'sm',
+  };
+
+  const request = e => {
+    e.preventDefault();
+    console.log('Request had been sent');
+  };
+
   return (
     <Flex
       direction="column"
@@ -33,6 +45,38 @@ function App() {
         size="lg"
         fontSize="5xl"
       />
+      <Button colorScheme="teal" size="lg" mt="5" onClick={request}>
+        Find adjectives
+      </Button>
+
+      <Flex w="100%" mt="20">
+        <Slider aria-label="slider-ex-6" onChange={val => setSliderValue(val)}>
+          <SliderMark value={25} {...labelStyles}>
+            25%
+          </SliderMark>
+          <SliderMark value={50} {...labelStyles}>
+            50%
+          </SliderMark>
+          <SliderMark value={75} {...labelStyles}>
+            75%
+          </SliderMark>
+          <SliderMark
+            value={sliderValue}
+            textAlign="center"
+            bg="blue.500"
+            color="white"
+            mt="-10"
+            ml="-5"
+            w="12"
+          >
+            {sliderValue}%
+          </SliderMark>
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb />
+        </Slider>
+      </Flex>
     </Flex>
   );
 }
