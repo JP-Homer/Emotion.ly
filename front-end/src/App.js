@@ -15,6 +15,8 @@ import {
   AlertDescription,
 } from '@chakra-ui/react';
 
+import { AutoResizeTextarea } from './ResizableTextarea';
+
 function App() {
   return (
     <Flex
@@ -26,7 +28,11 @@ function App() {
       ml="auto"
       mr="auto"
     >
-      <Textarea placeholder="Put your sentence here" size="lg" />
+      <AutoResizeTextarea
+        placeholder="Put your sentence here"
+        size="lg"
+        fontSize="5xl"
+      />
     </Flex>
   );
 }
