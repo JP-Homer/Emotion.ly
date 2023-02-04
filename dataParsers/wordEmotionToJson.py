@@ -1,6 +1,6 @@
 import json
 
-filepath = "emotions.csv"
+filepath = "./rawData/emotions.csv"
 
 file = open(filepath, "r")
 #anger disgust joy suprise fear sad

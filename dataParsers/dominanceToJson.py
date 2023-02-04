@@ -1,6 +1,6 @@
 import json
 
-filepath = "NRC-VAD-Lexicon.txt"
+filepath = "./rawData/NRC-VAD-Lexicon.txt"
 
 file = open(filepath, "r")
 
