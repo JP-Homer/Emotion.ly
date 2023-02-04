@@ -16,4 +16,6 @@ for line in fileLines:
     #each space between data is a special Large Space character
     dominanceMap[line[:-19]] = float(line[-5:].strip())
 
-json.dump(dominanceMap, open("dominanceMap.json", "w"))
+jsonFile = open("dominanceMap.json", "w")
+json.dump(dominanceMap, jsonFile)
+jsonFile.close()
