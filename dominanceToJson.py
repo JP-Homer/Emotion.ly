@@ -4,7 +4,7 @@ filepath = "NRC-VAD-Lexicon.txt"
 
 file = open(filepath, "r")
 
-dominanceMap = {}
+arousalMap = {}
 try:
     fileLines = file.readlines()
 except Exception as e:
@@ -14,8 +14,8 @@ except Exception as e:
 
 for line in fileLines:
     #each space between data is a special Large Space character
-    dominanceMap[line[:-19]] = float(line[-5:].strip())
+    arousalMap[line[:-19]] = float(line[-11:-6].strip())
 
-jsonFile = open("dominanceMap.json", "w")
-json.dump(dominanceMap, jsonFile)
+jsonFile = open("arousalMap.json", "w")
+json.dump(arousalMap, jsonFile)
 jsonFile.close()
