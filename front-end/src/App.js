@@ -45,12 +45,18 @@ function App() {
         size="lg"
         fontSize="5xl"
       />
-      <Button colorScheme="teal" size="lg" mt="5" onClick={request}>
+
+      <Button colorScheme="teal" size="lg" mt="10" onClick={request}>
         Find adjectives
       </Button>
 
-      <Flex w="100%" mt="20">
-        <Slider aria-label="slider-ex-6" onChange={val => setSliderValue(val)}>
+      <Flex w="100%" mt="10">
+        <Slider
+          aria-label="slider-ex-6"
+          onChange={val => setSliderValue(val)}
+          colorScheme="teal"
+          step="5"
+        >
           <SliderMark value={25} {...labelStyles}>
             25%
           </SliderMark>
@@ -63,7 +69,7 @@ function App() {
           <SliderMark
             value={sliderValue}
             textAlign="center"
-            bg="blue.500"
+            bg="teal"
             color="white"
             mt="-10"
             ml="-5"
