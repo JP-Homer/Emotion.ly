@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Flex,
   Text,
-  TextArea,
+  Textarea,
   Button,
   Slider,
   SliderTrack,
@@ -17,8 +17,16 @@ import {
 
 function App() {
   return (
-    <Flex>
-      <Text>Hello, world!</Text>
+    <Flex
+      direction="column"
+      justify="center"
+      align="center"
+      mt={10}
+      w={{ base: '95%', md: '90%', xl: '1024px' }}
+      ml="auto"
+      mr="auto"
+    >
+      <Textarea placeholder="Put your sentence here" size="lg" />
     </Flex>
   );
 }
