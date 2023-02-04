@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Flex,
+  Text,
   Box,
   Button,
   Slider,
@@ -30,7 +31,7 @@ function App() {
   const [scale, setScale] = useState(BASE_INFO);
 
   const labelStyles = {
-    mt: '2',
+    mt: '5',
     ml: '-2.5',
     fontSize: 'lg',
   };
@@ -61,20 +62,20 @@ function App() {
         Find adjectives
       </Button>
 
-      <Flex w="100%" mt="16" px="10">
+      <Flex w="100%" mt="16" px="10" direction="column">
         <Slider
           aria-label="slider-ex-6"
           onChange={val => setSliderValue(val)}
           colorScheme={scale.color}
           step="5"
         >
-          <SliderMark value={10} {...labelStyles} mt={5}>
+          <SliderMark value={5} {...labelStyles}>
             Less Intense
           </SliderMark>
-          <SliderMark value={{ base: 48, md: 46 }} {...labelStyles} mt={5}>
+          <SliderMark value={40} {...labelStyles}>
             Your Word
           </SliderMark>
-          <SliderMark value={75} {...labelStyles} mt={5}>
+          <SliderMark value={75} {...labelStyles}>
             More Intense
           </SliderMark>
           <SliderMark
@@ -101,6 +102,18 @@ function App() {
             <Box color={scale.color} as={FaAngry} />
           </SliderThumb>
         </Slider>
+
+        <Flex direction="row" justify="left" align="center" mt="20">
+          <Text fontSize="4xl">
+            <Text as="b">Definition: </Text>
+            {BASE_INFO.words.irate}
+          </Text>
+        </Flex>
+
+        <Alert status="error" variant="subtle">
+          <AlertIcon />
+          There was an error processing your request
+        </Alert>
       </Flex>
     </Flex>
   );
