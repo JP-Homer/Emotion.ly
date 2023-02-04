@@ -12,7 +12,7 @@ try:
             # If the value is an adjective, add it to the cut-down dictionary
             dict_entry = get_dict_entry(word)
             if is_adj(dict_entry):
-                emotionalWordsAdj[emotion] = word
+                emotionalWordsAdj[emotion].append(word)
 except Exception as e:
     print(e)
 
