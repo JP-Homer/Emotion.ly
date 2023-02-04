@@ -8,11 +8,16 @@ emotionalWordsAdj = {"anger":[], "disgust":[], "joy":[], "surprise":[], "fear":[
 try:
     with open(filepath, "r") as f:
         allData = json.load(f)
-        for emotion, word in allData.items():
+        for emotion, wordList in allData.items():
             # If the value is an adjective, add it to the cut-down dictionary
-            dict_entry = get_dict_entry(word)
-            if is_adj(dict_entry):
-                emotionalWordsAdj[emotion].append(word)
+            for word in wordList:
+                print(word)
+                try:
+                    dict_entry = get_dict_entry(word)
+                    if is_adj(dict_entry):
+                        emotionalWordsAdj[emotion].append(word)
+                except:
+                    continue
 except Exception as e:
     print(e)
 
