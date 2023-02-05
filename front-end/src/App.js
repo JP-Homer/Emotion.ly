@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { renderToString } from 'react-dom/server';
 import {
   Flex,
   Text,
@@ -25,8 +26,6 @@ const LOCAL = 'localhost:8080';
      like a regural text box
 
   2. Underline or highlight the adjectives.
-
-  3. Substitute the adjective for a newly selected one.
 
   4. Map all of the definitions to a numbered list items.
 
@@ -110,15 +109,15 @@ function App() {
   const styleInput = () => {
     const [left, right] = innerHTML.__html.split(word);
     const underlinedAdj = (
-      <Text textDecoration="underline" textDecorationColor={color}>
+      <Text textDecoration="underline" textDecorationColor={'black'}>
         {word}
       </Text>
     );
-    console.log(left, right, underlinedAdj);
-    return `${left}${underlinedAdj}${right}`;
-  };
 
-  const substituteInput = () => {};
+    const underlinedAdjHTML = renderToString(underlinedAdj);
+    console.log(`${left}${underlinedAdjHTML}${right}`);
+    return `${left}${underlinedAdjHTML}${right}`;
+  };
 
   const request = async e => {
     setErrorMsg('');
@@ -137,7 +136,10 @@ function App() {
       ml="auto"
       mr="auto"
     >
-      <AutoResizeInput setValue={setValue} />
+      <AutoResizeInput
+        dangerouslySetInnerHTML={innerHTML}
+        setValue={setValue}
+      />
       <Flex>
         {currentValue === innerHTML.__html ? (
           <Button colorScheme="teal" size="lg" mt="10" isDisabled>
@@ -167,7 +169,14 @@ function App() {
         <Flex w="100%" mt="16" px="10" direction="column">
           <Slider
             aria-label="slider-ex-6"
-            onChange={val => setSliderValue(val)}
+            onChange={val => {
+              setSliderValue(val);
+              setWord(words[val].word);
+              const newValue = currentValue.replace(word, words[val].word);
+              console.log(newValue);
+              setValue(newValue);
+              setCurrentValue(newValue);
+            }}
             colorScheme={color}
             defaultValue={sliderValue}
             min={0}
