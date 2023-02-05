@@ -4,19 +4,20 @@ import {
   Flex,
   Text,
   Button,
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderMark,
   Alert,
   AlertIcon,
   useClipboard,
-  UnorderedList,
-  ListItem,
+  Slider,
+  SliderMark,
+  SliderThumb,
+  SliderTrack,
+  SliderFilledTrack,
+  Box,
 } from '@chakra-ui/react';
 
-import { AutoResizeInput } from './ResizableInput';
+import Definitions from './Definitions';
+
+import { v4 as uuidv4 } from 'uuid';
 
 const URL = 'https://emotionly.herokuapp.com';
 const LOCAL = 'localhost:8080';
@@ -29,27 +30,76 @@ const LOCAL = 'localhost:8080';
 
   2. Underline or highlight the adjectives.
 
-  4. Map all of the definitions to a numbered list items.
-
 */
 
 const useCustomClipboard = () => {
   const { onCopy, value, setValue, hasCopied } = useClipboard('');
   const innerHTML = { __html: value };
 
-  return { onCopy, innerHTML, setValue, hasCopied };
+  return { onCopy, value, innerHTML, setValue, hasCopied };
 };
 
 function App() {
+  const [data, setData] = useState();
   const [sliderValue, setSliderValue] = useState();
-  const [word, setWord] = useState('mad');
-  const [base, setBase] = useState();
+  const [word, setWord] = useState();
   const [color, setColor] = useState();
   const [emoji, setEmoji] = useState();
   const [words, setWords] = useState();
   const [errorMsg, setErrorMsg] = useState();
   const [currentValue, setCurrentValue] = useState('');
-  const { onCopy, innerHTML, setValue, hasCopied } = useCustomClipboard();
+  const { onCopy, value, innerHTML, setValue, hasCopied } =
+    useCustomClipboard();
+
+  const labelStyles = {
+    mt: '5',
+    ml: '-2.5',
+    fontSize: 'lg',
+  };
+
+  const InputBox = props => {
+    const ref = useRef(null);
+
+    const setCaretToEnd = () => {
+      const el = ref.current;
+      if (!el) return;
+      el.focus();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    };
+
+    useEffect(() => {
+      setCaretToEnd();
+    }, [ref]);
+
+    return (
+      <Box
+        value={value}
+        dangerouslySetInnerHTML={innerHTML}
+        minH="unset"
+        overflow="hidden"
+        w="100%"
+        resize="none"
+        ref={ref}
+        minRows={1}
+        contentEditable="true"
+        display="inline-block"
+        className="editable"
+        onInput={e => {
+          console.log(e.target);
+          setCaretToEnd();
+          setValue(e.target.innerHTML);
+        }}
+        placeholder="Put your sentence here"
+        size="lg"
+        fontSize="5xl"
+      />
+    );
+  };
 
   const getData = async () => {
     const response = await fetch(URL, {
@@ -63,7 +113,7 @@ function App() {
     if (response.ok) {
       const finishedData = await response.json();
       console.log(finishedData);
-      return finishedData;
+      setScaleData(finishedData);
     } else {
       setErrorMsg(
         "The adjective in the sentence isn't in our database. Please, try another sentence."
@@ -72,43 +122,70 @@ function App() {
     }
   };
 
-  const labelStyles = {
-    mt: '5',
-    ml: '-2.5',
-    fontSize: 'lg',
-  };
-
   const setScaleData = newData => {
-    setBase(newData.base);
-    setColor(newData.color);
-    setWords(newData.words);
-    setSliderValue(newData.rank);
-    setWord(newData.word);
-
-    // eslint-disable-next-line default-case
-    switch (newData.base) {
-      case 'anger':
-        setEmoji('😡');
-        break;
-      case 'sadness':
-        setEmoji('🙁');
-        break;
-      case 'disgust':
-        setEmoji('🤢');
-        break;
-      case 'fear':
-        setEmoji('😱');
-        break;
-      case 'surprise':
-        setEmoji('😲');
-        break;
-      case 'joy':
-        setEmoji('😁');
-        break;
-    }
+    setData(newData);
+    newData.forEach((datum, index) => {
+      setColor(prev => {
+        return {
+          [index]: datum.color,
+          ...prev,
+        };
+      });
+      setWords(prev => {
+        return {
+          [index]: datum.words,
+          ...prev,
+        };
+      });
+      setSliderValue(prev => {
+        return {
+          [index]: datum.rank,
+          ...prev,
+        };
+      });
+      setWord(prev => {
+        return {
+          [index]: datum.word,
+          ...prev,
+        };
+      });
+      // eslint-disable-next-line default-case
+      switch (datum.base) {
+        case 'anger':
+          setEmoji(prev => {
+            return { [index]: '😡', ...prev };
+          });
+          break;
+        case 'sadness':
+          setEmoji(prev => {
+            return { [index]: '🙁', ...prev };
+          });
+          break;
+        case 'disgust':
+          setEmoji(prev => {
+            return { [index]: '🤢', ...prev };
+          });
+          break;
+        case 'fear':
+          setEmoji(prev => {
+            return { [index]: '😱', ...prev };
+          });
+          break;
+        case 'surprise':
+          setEmoji(prev => {
+            return { [index]: '😲', ...prev };
+          });
+          break;
+        case 'joy':
+          setEmoji(prev => {
+            return { [index]: '😁', ...prev };
+          });
+          break;
+      }
+    });
   };
 
-  const styleInput = () => {
+  const styleInput = word => {
     const [left, right] = innerHTML.__html.split(word);
     const underlinedAdj = (
       <Text textDecoration="underline" textDecorationColor={'black'}>
@@ -122,10 +199,9 @@ function App() {
   };
 
   const request = async e => {
-    setErrorMsg('');
-    const newData = await getData();
-    setScaleData(newData[0]);
     e.preventDefault();
+    setErrorMsg(undefined);
+    await getData();
   };
 
   return (
@@ -138,10 +214,7 @@ function App() {
       ml="auto"
       mr="auto"
     >
-      <AutoResizeInput
-        dangerouslySetInnerHTML={innerHTML}
-        setValue={setValue}
-      />
+      <InputBox />
       <Flex>
         {currentValue === innerHTML.__html ? (
           <Button colorScheme="teal" size="lg" mt="10" isDisabled>
@@ -154,7 +227,7 @@ function App() {
             mt="10"
             onClick={e => {
               request(e);
-              setValue(styleInput());
+              setValue(innerHTML.__html);
               setCurrentValue(innerHTML.__html);
             }}
           >
@@ -167,69 +240,83 @@ function App() {
         </Button>
       </Flex>
 
-      {base ? (
+      {data ? (
         <Flex w="100%" mt="16" px="10" direction="column">
-          <Slider
-            aria-label="slider-ex-6"
-            onChange={val => {
-              setSliderValue(val);
-              setWord(words[val].word);
-              const newValue = currentValue.replace(word, words[val].word);
-              console.log(newValue);
-              setValue(newValue);
-              setCurrentValue(newValue);
-            }}
-            colorScheme={color}
-            defaultValue={sliderValue}
-            min={0}
-            max={20}
-            step={1}
-          >
-            <SliderMark value={1} {...labelStyles}>
-              Less Intense
-            </SliderMark>
-            <SliderMark value={10} {...labelStyles}>
-              Your Word
-            </SliderMark>
-            <SliderMark value={16} {...labelStyles}>
-              More Intense
-            </SliderMark>
-            <SliderMark
-              value={sliderValue}
-              textAlign="center"
-              bg={color}
-              color="white"
-              mt="-16"
-              ml="-12"
-              px="5"
-              py="2"
-              borderRadius={6}
-            >
-              {words[sliderValue].word}
-            </SliderMark>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb
-              position="relative"
-              right={-10}
-              boxSize={10}
-              borderColor={color}
-            >
-              <Text color={color}>{emoji}</Text>
-            </SliderThumb>
-          </Slider>
+          {data.map((datum, index) => (
+            <>
+              <Slider
+                mt={10}
+                onChange={val => {
+                  setSliderValue(prev => {
+                    return {
+                      [index]: val,
+                      ...prev,
+                    };
+                  });
 
-          <Flex direction="row" justify="left" align="center" mt="20">
-            <Text fontSize="4xl">
-              <Text as="b">Definitions: </Text>
-              <UnorderedList>
-                {words[sliderValue].definition.map((def, index) => (
-                  <ListItem key={index}>{def}</ListItem>
-                ))}
-              </UnorderedList>
-            </Text>
-          </Flex>
+                  setWord(prev => {
+                    return {
+                      [index]: datum.words[val].word,
+                      ...prev,
+                    };
+                  });
+
+                  const newValue = currentValue.replace(
+                    word[index],
+                    datum.words[val].word
+                  );
+                  console.log(newValue);
+                  setValue(newValue);
+                  setCurrentValue(newValue);
+                }}
+                colorScheme={color[index]}
+                defaultValue={sliderValue[index]}
+                min={0}
+                max={20}
+                step={1}
+              >
+                <SliderMark value={1} {...labelStyles}>
+                  Less Intense
+                </SliderMark>
+                <SliderMark value={10} {...labelStyles}>
+                  Your Word
+                </SliderMark>
+                <SliderMark value={16} {...labelStyles}>
+                  More Intense
+                </SliderMark>
+                <SliderMark
+                  value={sliderValue[index]}
+                  textAlign="center"
+                  bg={color}
+                  color="white"
+                  mt="-16"
+                  ml="-12"
+                  px="5"
+                  py="2"
+                  borderRadius={6}
+                >
+                  {datum.words[sliderValue[index]].word}
+                </SliderMark>
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb
+                  position="relative"
+                  right={-10}
+                  boxSize={10}
+                  borderColor={color[index]}
+                >
+                  <Text color={color[index]}>{emoji[index]}</Text>
+                </SliderThumb>
+              </Slider>
+
+              <Definitions
+                key={uuidv4()}
+                words={words[index]}
+                sliderValue={sliderValue[index]}
+              />
+            </>
+          ))}
         </Flex>
       ) : null}
 

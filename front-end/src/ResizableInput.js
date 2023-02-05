@@ -32,6 +32,7 @@ export const AutoResizeInput = props => {
       display="inline-block"
       className="editable"
       onInput={e => {
+        console.log(e.target);
         setCaretToEnd();
         props.setValue(e.target.innerHTML);
       }}
