@@ -25,9 +25,13 @@ try:
 except Exception as e:
     print(e)
 
+
 for emotion in rankingData:
+    index = 0
     for word in rankingData[emotion]:
+        wordData[word]["index"] = index
         sortedMap[emotion][word] = wordData[word]
+        index += 1
 
 
 jsonFile = open("./jsonFiles/rankedEmotionsSublistObjects.json", "w")

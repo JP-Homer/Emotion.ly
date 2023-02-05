@@ -12,6 +12,19 @@ import json
 
 
 
+def return_surroundings(word : str, radius : int) -> list:
+    filepath = "./jsonFiles/defEmotionMapSlimmed.json"
+    file = open(filepath, "r")
+
+    try:
+        wordData = json.load(file)
+    except Exception as e:
+        print(e)
+    finally:
+        file.close()
+    
+    
+
 
 
 def parse_string(string : str) -> list:
