@@ -39,6 +39,7 @@ for emotion in emotionData:
                 try:
                     jsonFile = open("./jsonFiles/defEmotionMap.json", "w")
                     json.dump(wordMap, jsonFile)
+                    print ("api crashed successful calls wer dumped")
                 except:
                     jsonFile.close()
                 jsonFile.close()

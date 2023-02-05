@@ -1,0 +1,21 @@
+What do all these files do?
+
+There is essentially only one file and three jsons that are used in conjunction to frontend during runtime
+and that is:
+-functionsNeeded.py
+-./jsonFiles/rankedEmotionsSublist.json
+-./jsonFiles/rankedEmotionsSublistObjects.json
+-./jsonFiles/defEmotionMapSlimmed.json
+
+ the other files are all what we used to produce the data we are using. If these files are run in a certain 
+ order they can reproduce the required data at a moments notice. While we could merge these files into one,
+ each file does not affect the files in the chain behind it so if we want to change a data criteria it becomes
+ very easy to change a step in the chain. Also if we were to lose all of our json data or it becomes corrupted
+ we could easily recreate it.
+
+ Order Parsers Need To Be Called:
+
+ dominanceToJson.py -------------> mergeDefandEmotion.py -> defEmotionSlimmer.py -> intensityRanking.py
+                                      ^                                       |     |
+                                      |                                       V     V
+ wordEmotionToJson.py -> adjectiveMap.py                                     rankedObjectParser.py     
