@@ -15,6 +15,7 @@ import {
   UnorderedList,
   ListItem,
   Box,
+  Image,
 } from '@chakra-ui/react';
 
 const URL = 'https://emotionly.herokuapp.com';
@@ -72,9 +73,9 @@ function App() {
   };
 
   const labelStyles = {
-    mt: '5',
+    mt: { base: '5', md: '10' },
     ml: '-2.5',
-    fontSize: 'lg',
+    fontSize: { base: 'lg', md: 'xl', lg: '3xl' },
   };
 
   const setScaleData = newData => {
@@ -127,7 +128,7 @@ function App() {
     e.preventDefault();
   };
 
-  const AutoResizeInput = () => {
+  const AutoResizeInput = props => {
     const ref = useRef(null);
 
     const setCaretToEnd = () => {
@@ -149,20 +150,25 @@ function App() {
     return (
       <Box
         dangerouslySetInnerHTML={innerHTML}
-        minH="unset"
         overflow="hidden"
-        w="100%"
+        minH="85px"
+        minW="100%"
         resize="none"
         ref={ref}
         minRows={1}
         contentEditable="true"
         display="inline-block"
         className="editable"
+        border="1px solid gray"
+        px="10px"
+        py="5px"
+        borderRadius={10}
+        color="black"
         onInput={e => {
           setCaretToEnd();
           setValue(e.target.innerHTML);
         }}
-        placeholder="Put your sentence here"
+        _placeholder="Put your sentence here"
         size="lg"
         fontSize="5xl"
       />
@@ -172,22 +178,30 @@ function App() {
   return (
     <Flex
       direction="column"
-      justify="center"
       align="center"
       mt={10}
       w={{ base: '95%', md: '90%', xl: '1024px' }}
+      h="100vh"
       ml="auto"
       mr="auto"
     >
+      {/* <Box mt={10}>
+        <Image boxsize="100%" src="emotionlly-logo-1-remove.png" />
+      </Box> */}
       <AutoResizeInput />
       <Flex>
         {currentValue === innerHTML.__html ? (
-          <Button colorScheme="teal" size="lg" mt="10" isDisabled>
+          <Button
+            colorScheme={color ? color : 'teal'}
+            size="lg"
+            mt="10"
+            isDisabled
+          >
             Find adjectives
           </Button>
         ) : (
           <Button
-            colorScheme="teal"
+            colorScheme={color ? color : 'teal'}
             size="lg"
             mt="10"
             onClick={e => {
@@ -200,13 +214,19 @@ function App() {
           </Button>
         )}
 
-        <Button colorScheme="teal" size="lg" ml="10" mt="10" onClick={onCopy}>
+        <Button
+          colorScheme={color ? color : 'teal'}
+          size="lg"
+          ml="10"
+          mt="10"
+          onClick={onCopy}
+        >
           {hasCopied ? 'Copied!' : 'Copy'}
         </Button>
       </Flex>
 
       {base ? (
-        <Flex w="100%" mt="16" px="10" direction="column">
+        <Flex w="100%" mt={32} px="10" direction="column">
           <Slider
             aria-label="slider-ex-6"
             onChange={val => {
@@ -235,13 +255,14 @@ function App() {
             <SliderMark
               value={sliderValue}
               textAlign="center"
+              fontSize={{ base: 'xl', md: '2xl', lg: '3xl' }}
               bg={color}
               color="white"
-              mt="-16"
-              ml="-12"
+              mt={{ base: '-75px', md: '-95px', lg: '-110px' }}
+              ml={{ base: '-15%', md: '-10%', lg: '-5%' }}
               px="5"
               py="2"
-              borderRadius={6}
+              borderRadius={10}
             >
               {words[sliderValue].word}
             </SliderMark>
@@ -251,15 +272,20 @@ function App() {
             <SliderThumb
               position="relative"
               right={-10}
-              boxSize={10}
+              boxSize={{ base: 10, md: 16, lg: 16 }}
               borderColor={color}
             >
-              <Text color={color}>{emoji}</Text>
+              <Text
+                fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}
+                color={color}
+              >
+                {emoji}
+              </Text>
             </SliderThumb>
           </Slider>
 
           <Flex direction="row" justify="left" align="center" mt="20">
-            <Text fontSize="4xl">
+            <Text fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}>
               <Text as="b">Definitions: </Text>
               <UnorderedList>
                 {words[sliderValue].definition.map((def, index) => (
@@ -272,7 +298,12 @@ function App() {
       ) : null}
 
       {errorMsg ? (
-        <Alert status="error" borderRadius={10} fontSize="4xl" mt="10">
+        <Alert
+          status="error"
+          borderRadius={10}
+          fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}
+          mt="10"
+        >
           <AlertIcon boxSize={14} />
           {errorMsg}
         </Alert>
