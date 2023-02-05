@@ -4,8 +4,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/", methods=['POST'])
+@app.route("/")
 def handle_json():
-    string = request # string from front end
+    return "works" # string from front end
     # do something with string
     # return json
