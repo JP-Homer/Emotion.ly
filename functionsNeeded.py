@@ -74,6 +74,12 @@ def find_surroundings(word : str, radius : int) -> dict:
 
                 returnData[word]["words"].append(wordDict)
             
+            wordDict = {"word" : word}
+            wordDict["definition"] = rankedData[emotion][word]["definitions"]
+            wordDict["rank"] = rankedData[emotion][word]["index"] - difference
+
+            returnData[word]["words"].append(wordDict)
+            
             for rword in right_words:
                 wordDict = {"word" : rword}
                 wordDict["definition"] = rankedData[emotion][rword]["definitions"]
@@ -143,4 +149,6 @@ if __name__ == "__main__":
     # print(find_adjective("hello, there HOW'RE you you abhorrent man with a happy, ugly walk"))
     # print (find_surroundings("dun", 5))
     # print (get_adjective_info("hello, there HOW'RE you you abhorrent man with a happy, ugly walk", 2))
+    
+    # print (get_adjective_info("happy", 0))
     pass
