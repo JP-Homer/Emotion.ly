@@ -36,7 +36,7 @@ def return_surrounding_words(index : int, emotion : str, radius : int) -> list[l
     
     return [leftwords, rightwords]
 
-def find_surroundings(word : str, radius : int) -> list:
+def find_surroundings(word : str, radius : int) -> dict:
     '''
     given a word and radius will return the words of that emotion that surround it in ranking
     '''
@@ -99,7 +99,7 @@ def parse_string(string : str) -> list:
 
     return stripList
 
-def find_adjective(sentance : str) ->dict:
+def find_adjective(sentance : str) ->list:
     '''
     given sentance, removes words containing non-alphabetic characters and returns 
     all adjectives as a list
@@ -126,9 +126,16 @@ def find_adjective(sentance : str) ->dict:
     return onlyAdj
 
 
-
+def get_adjective_info(sentance : str, radius : int) -> list:
+    return_values = {}
+    for adjective in find_adjective(sentance):
+        workingDict = find_surroundings(adjective, radius)
+        for word in workingDict:
+            return_values[word] = (workingDict[word])
+    return return_values
 
 if __name__ == "__main__":
     # print(find_adjective("hello, there HOW'RE you you abhorrent man with a happy, ugly walk"))
     # print (find_surroundings("dun", 5))
+    print (get_adjective_info("hello, there HOW'RE you you abhorrent man with a happy, ugly walk", 2))
     pass
