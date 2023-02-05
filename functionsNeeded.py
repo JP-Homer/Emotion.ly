@@ -50,14 +50,15 @@ def find_surroundings(word : str, radius : int) -> dict:
     finally:
         file.close()
     
-    returnData = {word : {}}
+    returnData = {}
 
     for emotion in rankedData:
         if (word in rankedData[emotion]):
             wordData = rankedData[emotion][word]
             
-            returnData[word]["base"] = wordData["emotion"]
-            returnData[word]["color"] = wordData["color"]
+            returnData["word"] = word
+            returnData["base"] = wordData["emotion"]
+            returnData["color"] = wordData["color"]
 
             left_words, right_words = return_surrounding_words(wordData["index"], wordData["emotion"], radius)
 
@@ -65,28 +66,28 @@ def find_surroundings(word : str, radius : int) -> dict:
             if (len(left_words) != 0):
                 difference = rankedData[emotion][left_words[0]]["index"]
             
-            returnData[word]["rank"] = wordData["index"] - difference
+            returnData["rank"] = wordData["index"] - difference
 
-            returnData[word]["words"] = []
+            returnData["words"] = []
             for lword in left_words:
                 wordDict = {"word" : lword}
                 wordDict["definition"] = rankedData[emotion][lword]["definitions"]
                 wordDict["rank"] = rankedData[emotion][lword]["index"] - difference
 
-                returnData[word]["words"].append(wordDict)
+                returnData["words"].append(wordDict)
             
             wordDict = {"word" : word}
             wordDict["definition"] = rankedData[emotion][word]["definitions"]
             wordDict["rank"] = rankedData[emotion][word]["index"] - difference
 
-            returnData[word]["words"].append(wordDict)
+            returnData["words"].append(wordDict)
             
             for rword in right_words:
                 wordDict = {"word" : rword}
                 wordDict["definition"] = rankedData[emotion][rword]["definitions"]
                 wordDict["rank"] = rankedData[emotion][rword]["index"] - difference
 
-                returnData[word]["words"].append(wordDict)
+                returnData["words"].append(wordDict)
     
     return returnData
             
@@ -139,11 +140,9 @@ def get_adjective_info(sentance : str, radius : int) -> dict:
     dictionary with its attributes as well as the words of a similar intensity 
     and emotion
     '''
-    return_values = {}
+    return_values = []
     for adjective in find_adjective(sentance):
-        workingDict = find_surroundings(adjective, radius)
-        for word in workingDict:
-            return_values[word] = (workingDict[word])
+        return_values.append(find_surroundings(adjective, radius))
     return return_values
 
 if __name__ == "__main__":
@@ -151,5 +150,5 @@ if __name__ == "__main__":
     # print (find_surroundings("dun", 5))
     # print (get_adjective_info("hello, there HOW'RE you you abhorrent man with a happy, ugly walk", 2))
     
-    # print (get_adjective_info("mad", 10))
+    print (get_adjective_info("mad", 10))
     pass
