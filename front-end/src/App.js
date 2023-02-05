@@ -40,6 +40,8 @@ function App() {
   };
 
   const setScaleData = () => {
+    setData(BASE_INFO);
+
     // eslint-disable-next-line default-case
     switch (BASE_INFO.base) {
       case 'anger':
@@ -89,7 +91,6 @@ function App() {
         size="lg"
         fontSize="5xl"
       />
-
       <Flex>
         <Button colorScheme="teal" size="lg" mt="10" onClick={request}>
           Find adjectives
@@ -100,56 +101,58 @@ function App() {
         </Button>
       </Flex>
 
-      <Flex w="100%" mt="16" px="10" direction="column">
-        <Slider
-          aria-label="slider-ex-6"
-          onChange={val => setSliderValue(val)}
-          colorScheme={color}
-          step="5"
-        >
-          <SliderMark value={5} {...labelStyles}>
-            Less Intense
-          </SliderMark>
-          <SliderMark value={40} {...labelStyles}>
-            Your Word
-          </SliderMark>
-          <SliderMark value={75} {...labelStyles}>
-            More Intense
-          </SliderMark>
-          <SliderMark
-            value={sliderValue}
-            textAlign="center"
-            bg={color}
-            color="white"
-            mt="-12"
-            ml="-6"
-            w="12"
+      {data ? (
+        <Flex w="100%" mt="16" px="10" direction="column">
+          <Slider
+            aria-label="slider-ex-6"
+            onChange={val => setSliderValue(val)}
+            colorScheme={color}
+            step="5"
           >
-            {sliderValue}%
-          </SliderMark>
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb
-            position="relative"
-            right={-10}
-            boxSize={10}
-            borderColor={color}
-            ml={-5}
-          >
-            <Text color={color}>{emoji}</Text>
-          </SliderThumb>
-        </Slider>
+            <SliderMark value={5} {...labelStyles}>
+              Less Intense
+            </SliderMark>
+            <SliderMark value={40} {...labelStyles}>
+              Your Word
+            </SliderMark>
+            <SliderMark value={75} {...labelStyles}>
+              More Intense
+            </SliderMark>
+            <SliderMark
+              value={sliderValue}
+              textAlign="center"
+              bg={color}
+              color="white"
+              mt="-12"
+              ml="-6"
+              w="12"
+            >
+              {sliderValue}%
+            </SliderMark>
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb
+              position="relative"
+              right={-10}
+              boxSize={10}
+              borderColor={color}
+              ml={-5}
+            >
+              <Text color={color}>{emoji}</Text>
+            </SliderThumb>
+          </Slider>
 
-        <Flex direction="row" justify="left" align="center" mt="20">
-          <Text fontSize="4xl">
-            <Text as="b">Definition: </Text>
-            {BASE_INFO.words.irate}
-          </Text>
+          <Flex direction="row" justify="left" align="center" mt="20">
+            <Text fontSize="4xl">
+              <Text as="b">Definition: </Text>
+              {BASE_INFO.words.irate}
+            </Text>
+          </Flex>
         </Flex>
-      </Flex>
+      ) : null}
 
-      {!errorMsg ? (
+      {errorMsg ? (
         <Alert status="error" borderRadius={10} fontSize="4xl" mt="10">
           <AlertIcon boxSize={14} />
           No adjectives that portray emotions were found. Try another sentence.
