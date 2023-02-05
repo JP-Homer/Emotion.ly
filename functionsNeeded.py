@@ -20,8 +20,8 @@ def return_surrounding_words(index : int, emotion : str, radius : int) -> list[l
     
     if (index - radius < 0):
         radius += -1*(index - radius)
-    elif (index + radius > len(rankedData[emotion])):
-        radius += index + radius - len(rankedData[emotion])
+    elif (index + radius > len(rankedData[emotion]) - 1):
+        radius += index + radius - len(rankedData[emotion]) + 1
 
 
 
@@ -60,6 +60,7 @@ def find_surroundings(word : str, radius : int) -> dict:
             returnData[word]["color"] = wordData["color"]
 
             left_words, right_words = return_surrounding_words(wordData["index"], wordData["emotion"], radius)
+
             difference = wordData["index"]
             if (len(left_words) != 0):
                 difference = rankedData[emotion][left_words[0]]["index"]
@@ -150,5 +151,5 @@ if __name__ == "__main__":
     # print (find_surroundings("dun", 5))
     # print (get_adjective_info("hello, there HOW'RE you you abhorrent man with a happy, ugly walk", 2))
     
-    # print (get_adjective_info("happy", 0))
+    # print (get_adjective_info("mad", 10))
     pass
