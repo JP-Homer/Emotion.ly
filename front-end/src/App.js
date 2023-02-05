@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Flex,
   Text,
-  Box,
   Button,
   Slider,
   SliderTrack,
@@ -11,14 +10,12 @@ import {
   SliderMark,
   Alert,
   AlertIcon,
-  AlertTitle,
-  AlertDescription,
 } from '@chakra-ui/react';
-import { FaAngry } from 'react-icons/fa';
 
 import { AutoResizeTextarea } from './ResizableTextarea';
 
 const BASE_INFO = {
+  base: 'anger',
   color: 'teal',
   words: {
     irate: 'Feeling or showing extreme anger',
@@ -28,7 +25,9 @@ const BASE_INFO = {
 
 function App() {
   const [sliderValue, setSliderValue] = useState(50);
-  const [scale, setScale] = useState(BASE_INFO);
+  const [color, setColor] = useState();
+  const [emoji, setEmoji] = useState();
+  const [words, setWords] = useState();
 
   const labelStyles = {
     mt: '5',
@@ -36,10 +35,37 @@ function App() {
     fontSize: 'lg',
   };
 
+  const setScaleData = () => {
+    // eslint-disable-next-line default-case
+    switch (BASE_INFO.base) {
+      case 'anger':
+        setEmoji('😡');
+        break;
+      case 'sadness':
+        setEmoji('🙁');
+        break;
+      case 'disgust':
+        setEmoji('🤢');
+        break;
+      case 'fear':
+        setEmoji('😱');
+        break;
+      case 'surprise':
+        setEmoji('😲');
+        break;
+      case 'joy':
+        setEmoji('😁');
+        break;
+    }
+
+    setColor(BASE_INFO.color);
+    setWords(BASE_INFO.words);
+  };
+
   const request = e => {
     e.preventDefault();
     console.log('Request had been sent');
-    console.log(scale);
+    setScaleData();
   };
 
   return (
@@ -66,7 +92,7 @@ function App() {
         <Slider
           aria-label="slider-ex-6"
           onChange={val => setSliderValue(val)}
-          colorScheme={scale.color}
+          colorScheme={color}
           step="5"
         >
           <SliderMark value={5} {...labelStyles}>
@@ -81,7 +107,7 @@ function App() {
           <SliderMark
             value={sliderValue}
             textAlign="center"
-            bg={scale.color}
+            bg={color}
             color="white"
             mt="-12"
             ml="-6"
@@ -96,10 +122,10 @@ function App() {
             position="relative"
             right={-10}
             boxSize={10}
-            borderColor={scale.color}
+            borderColor={color}
             ml={-5}
           >
-            <Box color={scale.color} as={FaAngry} />
+            <Text color={color}>{emoji}</Text>
           </SliderThumb>
         </Slider>
 
@@ -110,9 +136,9 @@ function App() {
           </Text>
         </Flex>
 
-        <Alert status="error" variant="subtle">
-          <AlertIcon />
-          There was an error processing your request
+        <Alert status="error" borderRadius={10} fontSize="4xl" mt="10">
+          <AlertIcon boxSize={14} />
+          No adjectives that portray emotions were found. Try another sentence.
         </Alert>
       </Flex>
     </Flex>
