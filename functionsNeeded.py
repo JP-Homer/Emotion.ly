@@ -1,12 +1,11 @@
 import re
 import json
 
-#TODO
-# Receive the string from the front end
 
-def return_surrounding_words(index : int, emotion : str, radius : int) -> list[list, list]:
+def return_surrounding_words(index : int, emotion : str, radius : int) -> list[list]:
     '''
-    given an index and an emotion will return words that suround that index in ranking of that emotion
+    given an index and an emotion will return words that are at most radius away in the
+    ranking of the given emotion
     '''
     filepath = "./jsonFiles/rankedEmotionsSublist.json"
     file = open(filepath, "r")
@@ -18,6 +17,8 @@ def return_surrounding_words(index : int, emotion : str, radius : int) -> list[l
     finally:
         file.close()
     
+    #checks if given index is too close to an edge of the data
+    #if so takes the additional required elements from the other side of index
     if (index - radius < 0):
         radius += -1*(index - radius)
     elif (index + radius > len(rankedData[emotion]) - 1):
@@ -36,9 +37,11 @@ def return_surrounding_words(index : int, emotion : str, radius : int) -> list[l
     
     return [leftwords, rightwords]
 
+
 def find_surroundings(word : str, radius : int) -> dict:
     '''
-    given a word and radius will return the words of that emotion that surround it in ranking
+    given a word and radius will return the words of the matching emotion that 
+    surround it in ranking based on radius
     '''
     filepath = "./jsonFiles/rankedEmotionsSublistObjects.json"
     file = open(filepath, "r")
@@ -52,6 +55,10 @@ def find_surroundings(word : str, radius : int) -> dict:
     
     returnData = {}
 
+    #finds which emotion the word belongs to as well as the
+    #index of the word in order to find the surrounding words and
+    #add all the values at most radius away from the word this will
+    #include the word itself
     for emotion in rankedData:
         if (word in rankedData[emotion]):
             wordData = rankedData[emotion][word]
@@ -88,6 +95,7 @@ def find_surroundings(word : str, radius : int) -> dict:
                 wordDict["rank"] = rankedData[emotion][rword]["index"] - difference
 
                 returnData["words"].append(wordDict)
+            break
     
     return returnData
             
@@ -129,16 +137,14 @@ def find_adjective(sentance : str) ->list:
         if word in allData:
             onlyAdj.append(word)
 
-    file.close()
-
     return onlyAdj
 
 
 def get_adjective_info(sentance : str, radius : int) -> dict:
     '''
-    takes a sentance and returns the adjectives in it, each adjective has a
-    dictionary with its attributes as well as the words of a similar intensity 
-    and emotion
+    takes a sentance and returns the adjectives in it, each adjective is stored in a
+    dictionary with its attributes as well as the words radius away in intensity rankings
+    of its emotion
     '''
     return_values = []
     for adjective in find_adjective(sentance):
@@ -149,6 +155,5 @@ if __name__ == "__main__":
     # print(find_adjective("hello, there HOW'RE you you abhorrent man with a happy, ugly walk"))
     # print (find_surroundings("dun", 5))
     # print (get_adjective_info("hello, there HOW'RE you you abhorrent man with a happy, ugly walk", 2))
-    
-    print (get_adjective_info("mad", 10))
+    #print (get_adjective_info("mad", 10))
     pass
