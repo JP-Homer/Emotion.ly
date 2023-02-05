@@ -30,6 +30,7 @@ function App() {
   const [color, setColor] = useState();
   const [emoji, setEmoji] = useState();
   const [words, setWords] = useState();
+  const [errorMsg, setErrorMsg] = useState();
   const { onCopy, value, setValue, hasCopied } = useClipboard('');
 
   const labelStyles = {
@@ -89,13 +90,15 @@ function App() {
         fontSize="5xl"
       />
 
-      <Button colorScheme="teal" size="lg" mt="10" onClick={request}>
-        Find adjectives
-      </Button>
+      <Flex>
+        <Button colorScheme="teal" size="lg" mt="10" onClick={request}>
+          Find adjectives
+        </Button>
 
-      <Button colorScheme="teal" size="lg" mt="10" onClick={onCopy}>
-        {hasCopied ? 'Copied!' : 'Copy'}
-      </Button>
+        <Button colorScheme="teal" size="lg" ml="10" mt="10" onClick={onCopy}>
+          {hasCopied ? 'Copied!' : 'Copy'}
+        </Button>
+      </Flex>
 
       <Flex w="100%" mt="16" px="10" direction="column">
         <Slider
@@ -144,12 +147,14 @@ function App() {
             {BASE_INFO.words.irate}
           </Text>
         </Flex>
+      </Flex>
 
+      {!errorMsg ? (
         <Alert status="error" borderRadius={10} fontSize="4xl" mt="10">
           <AlertIcon boxSize={14} />
           No adjectives that portray emotions were found. Try another sentence.
         </Alert>
-      </Flex>
+      ) : null}
     </Flex>
   );
 }
