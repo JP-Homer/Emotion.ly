@@ -244,6 +244,9 @@ function App() {
         <Flex w="100%" mt="16" px="10" direction="column">
           {data.map((datum, index) => (
             <>
+              <Text as="b" textAlign="center" fontSize="6xl">
+                {datum.word}
+              </Text>
               <Slider
                 mt={10}
                 onChange={val => {
@@ -287,7 +290,7 @@ function App() {
                 <SliderMark
                   value={sliderValue[index]}
                   textAlign="center"
-                  bg={color}
+                  bg={color[index]}
                   color="white"
                   mt="-16"
                   ml="-12"
