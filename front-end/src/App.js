@@ -16,17 +16,20 @@ import {
 import { AutoResizeTextarea } from './ResizableTextarea';
 
 const BASE_INFO = {
-  base: 'anger',
-  color: 'teal',
-  words: {
-    irate: 'Feeling or showing extreme anger',
-    mad: 'Roused to anger',
+  irate: {
+    base: 'anger',
+    color: 'teal',
+    words: {
+      irate: 'Feeling or showing extreme anger',
+      mad: 'Roused to anger',
+    },
   },
 };
 
 function App() {
   const [sliderValue, setSliderValue] = useState(50);
   const [data, setData] = useState();
+  const [base, setBase] = useState();
   const [color, setColor] = useState();
   const [emoji, setEmoji] = useState();
   const [words, setWords] = useState();
@@ -41,9 +44,11 @@ function App() {
 
   const setScaleData = () => {
     setData(BASE_INFO);
+    console.log(value);
+    setBase(Object.keys(BASE_INFO)[0]);
 
     // eslint-disable-next-line default-case
-    switch (BASE_INFO.base) {
+    switch (BASE_INFO.irate.base) {
       case 'anger':
         setEmoji('😡');
         break;
@@ -64,14 +69,23 @@ function App() {
         break;
     }
 
-    setColor(BASE_INFO.color);
-    setWords(BASE_INFO.words);
+    setColor(BASE_INFO.irate.color);
+    setWords(BASE_INFO.irate.words);
   };
 
   const request = e => {
     e.preventDefault();
     console.log('Request had been sent');
-    setScaleData();
+    if (value) {
+      setScaleData();
+    } else {
+      setData(undefined);
+      setBase('');
+      setEmoji('');
+      setColor('');
+      setWords({});
+      setErrorMsg('Please, type your sentence!');
+    }
   };
 
   return (
@@ -148,7 +162,7 @@ function App() {
           <Flex direction="row" justify="left" align="center" mt="20">
             <Text fontSize="4xl">
               <Text as="b">Definition: </Text>
-              {BASE_INFO.words.irate}
+              {BASE_INFO.irate.words.irate}
             </Text>
           </Flex>
         </Flex>
@@ -157,7 +171,7 @@ function App() {
       {errorMsg ? (
         <Alert status="error" borderRadius={10} fontSize="4xl" mt="10">
           <AlertIcon boxSize={14} />
-          No adjectives that portray emotions were found. Try another sentence.
+          {errorMsg}
         </Alert>
       ) : null}
     </Flex>
