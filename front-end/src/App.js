@@ -10,6 +10,7 @@ import {
   SliderMark,
   Alert,
   AlertIcon,
+  useClipboard,
 } from '@chakra-ui/react';
 
 import { AutoResizeTextarea } from './ResizableTextarea';
@@ -25,9 +26,11 @@ const BASE_INFO = {
 
 function App() {
   const [sliderValue, setSliderValue] = useState(50);
+  const [data, setData] = useState();
   const [color, setColor] = useState();
   const [emoji, setEmoji] = useState();
   const [words, setWords] = useState();
+  const { onCopy, value, setValue, hasCopied } = useClipboard('');
 
   const labelStyles = {
     mt: '5',
@@ -79,6 +82,8 @@ function App() {
       mr="auto"
     >
       <AutoResizeTextarea
+        value={value}
+        onChange={e => setValue(e.target.value)}
         placeholder="Put your sentence here"
         size="lg"
         fontSize="5xl"
@@ -86,6 +91,10 @@ function App() {
 
       <Button colorScheme="teal" size="lg" mt="10" onClick={request}>
         Find adjectives
+      </Button>
+
+      <Button colorScheme="teal" size="lg" mt="10" onClick={onCopy}>
+        {hasCopied ? 'Copied!' : 'Copy'}
       </Button>
 
       <Flex w="100%" mt="16" px="10" direction="column">
