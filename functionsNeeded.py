@@ -126,7 +126,12 @@ def find_adjective(sentance : str) ->list:
     return onlyAdj
 
 
-def get_adjective_info(sentance : str, radius : int) -> list:
+def get_adjective_info(sentance : str, radius : int) -> dict:
+    '''
+    takes a sentance and returns the adjectives in it, each adjective has a
+    dictionary with its attributes as well as the words of a similar intensity 
+    and emotion
+    '''
     return_values = {}
     for adjective in find_adjective(sentance):
         workingDict = find_surroundings(adjective, radius)
@@ -137,5 +142,5 @@ def get_adjective_info(sentance : str, radius : int) -> list:
 if __name__ == "__main__":
     # print(find_adjective("hello, there HOW'RE you you abhorrent man with a happy, ugly walk"))
     # print (find_surroundings("dun", 5))
-    print (get_adjective_info("hello, there HOW'RE you you abhorrent man with a happy, ugly walk", 2))
+    # print (get_adjective_info("hello, there HOW'RE you you abhorrent man with a happy, ugly walk", 2))
     pass

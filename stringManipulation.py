@@ -40,5 +40,6 @@ def find_adjective(words : list):
 
 
 if __name__ == "__main__":
-    parsed = parse_string("hello, there HOW'RE you you abhorrent man with a happy, ugly walk")
-    print(find_adjective(parsed))
+    # parsed = parse_string("hello, there HOW'RE you you abhorrent man with a happy, ugly walk")
+    # print(find_adjective(parsed))
+    pass
