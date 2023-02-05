@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Flex,
   Text,
@@ -26,6 +26,9 @@ const BASE_INFO = {
   },
 };
 
+const URL = 'https://emotionly.herokuapp.com';
+const LOCAL = 'localhost:8080';
+
 /* 
   TODO:
 
@@ -40,7 +43,8 @@ const BASE_INFO = {
 
 function App() {
   const [sliderValue, setSliderValue] = useState(50);
-  const [data, setData] = useState();
+  const [defaultRank, setDefaultRank] = useState();
+  const [word, setWord] = useState();
   const [base, setBase] = useState();
   const [color, setColor] = useState();
   const [emoji, setEmoji] = useState();
@@ -49,19 +53,42 @@ function App() {
   const [currentValue, setCurrentValue] = useState('');
   const { onCopy, value, setValue, hasCopied } = useClipboard('');
 
+  const getData = async () => {
+    const response = await fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sentence: value }),
+    });
+
+    if (response.ok) {
+      const finishedData = await response.json();
+      console.log(finishedData.mad);
+      return finishedData.mad;
+    } else {
+      setErrorMsg(
+        "The adjective in the sentence isn't in our database. Please, try another sentence."
+      );
+      return;
+    }
+  };
+
   const labelStyles = {
     mt: '5',
     ml: '-2.5',
     fontSize: 'lg',
   };
 
-  const setScaleData = () => {
-    setData(BASE_INFO);
-    console.log(value);
-    setBase(Object.keys(BASE_INFO)[0]);
+  const setScaleData = newData => {
+    setBase(newData.base);
+    setColor(newData.color);
+    setWords(newData.words);
+    setDefaultRank(newData.rank);
+    setWord(newData.word);
 
     // eslint-disable-next-line default-case
-    switch (BASE_INFO.irate.base) {
+    switch (newData.base) {
       case 'anger':
         setEmoji('😡');
         break;
@@ -81,9 +108,6 @@ function App() {
         setEmoji('😁');
         break;
     }
-
-    setColor(BASE_INFO.irate.color);
-    setWords(BASE_INFO.irate.words);
   };
 
   const styleInput = () => {
@@ -94,26 +118,18 @@ function App() {
       </Text>
     );
     console.log(left, right, underlinedAdj);
-    return `${left}${underlinedAdj}${right}`;
+    return `${left}${underlinedAdj.props.children}${right}`;
   };
 
   const substituteInput = () => {};
 
-  const request = e => {
+  const request = async e => {
+    setErrorMsg('');
+    const newData = await getData();
+    console.log(newData);
+    setScaleData(newData);
     e.preventDefault();
     console.log('Request had been sent');
-    if (value) {
-      setErrorMsg('');
-      setScaleData();
-      setValue(styleInput());
-    } else {
-      setData(undefined);
-      setBase('');
-      setEmoji('');
-      setColor('');
-      setWords({});
-      setErrorMsg('Please, type your sentence!');
-    }
   };
 
   return (
@@ -135,7 +151,7 @@ function App() {
       />
       <Flex>
         {currentValue === value ? (
-          <Button colorScheme="teal" size="lg" mt="10">
+          <Button colorScheme="teal" size="lg" mt="10" isDisabled>
             Find adjectives
           </Button>
         ) : (
@@ -145,6 +161,7 @@ function App() {
             mt="10"
             onClick={e => {
               request(e);
+              setValue(styleInput());
               setCurrentValue(value);
             }}
           >
@@ -157,7 +174,7 @@ function App() {
         </Button>
       </Flex>
 
-      {data ? (
+      {base ? (
         <Flex w="100%" mt="16" px="10" direction="column">
           <Slider
             aria-label="slider-ex-6"
