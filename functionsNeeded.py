@@ -126,7 +126,7 @@ def find_adjective(sentance : str) ->list:
     return onlyAdj
 
 
-def get_adjective_info(sentance : str, radius : int) -> list:
+def get_adjective_info(sentance : str, radius : int) -> dict:
     return_values = {}
     for adjective in find_adjective(sentance):
         workingDict = find_surroundings(adjective, radius)
