@@ -1,9 +1,8 @@
 import { Box } from '@chakra-ui/react';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 export const AutoResizeInput = props => {
   const ref = useRef(null);
-  const [value, setValue] = useState('');
 
   const setCaretToEnd = () => {
     const el = ref.current;
@@ -19,11 +18,7 @@ export const AutoResizeInput = props => {
 
   useEffect(() => {
     setCaretToEnd();
-  }, []);
-
-  useEffect(() => {
-    setValue(props.value);
-  }, [props.value]);
+  }, [ref]);
 
   return (
     <Box
@@ -38,14 +33,12 @@ export const AutoResizeInput = props => {
       className="editable"
       onInput={e => {
         console.log(e.target);
-        setValue(e.target.innerHTML);
         setCaretToEnd();
-        props.setValue(value);
+        props.setValue(e.target.innerHTML);
       }}
       placeholder="Put your sentence here"
       size="lg"
       fontSize="5xl"
-      dangerouslySetInnerHTML={{ __html: value }}
       {...props}
     />
   );
