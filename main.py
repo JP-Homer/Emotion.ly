@@ -10,8 +10,10 @@ CORS(app)
 def handle_json(): # string from front end
      data = request.json
      string = data.get('sentence')
-     obj = functionsNeeded.get_adjective_info(string, 2)
-     return jsonify(obj)
+     print(string)
 
     # do something with string
+     obj = functionsNeeded.get_adjective_info(string, 2)
+
     # return json
+     return jsonify(obj)
