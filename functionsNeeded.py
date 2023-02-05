@@ -2,13 +2,7 @@ import re
 import json
 
 #TODO
-#given word return all values around given threshold explicit placement in range
 # Receive the string from the front end
-#format json
-    # emotion(base)
-    # color()
-    # words()
-    #     word[definition]
 
 def return_surrounding_words(index : int, emotion : str, radius : int) -> list[list, list]:
     '''
@@ -91,11 +85,6 @@ def find_surroundings(word : str, radius : int) -> list:
             
 
 
-    
-
-
-
-
 def parse_string(string : str) -> list:
     '''
     given sentance string returns all words in form of list, removes non letter words
@@ -110,7 +99,7 @@ def parse_string(string : str) -> list:
 
     return stripList
 
-def find_adjective(sentance : str) ->list:
+def find_adjective(sentance : str) ->dict:
     '''
     given sentance, removes words containing non-alphabetic characters and returns 
     all adjectives as a list
@@ -141,5 +130,5 @@ def find_adjective(sentance : str) ->list:
 
 if __name__ == "__main__":
     # print(find_adjective("hello, there HOW'RE you you abhorrent man with a happy, ugly walk"))
-    print (find_surroundings("dun", 5))
+    # print (find_surroundings("dun", 5))
     pass
