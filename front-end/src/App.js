@@ -12,6 +12,8 @@ import {
   Alert,
   AlertIcon,
   useClipboard,
+  UnorderedList,
+  ListItem,
 } from '@chakra-ui/react';
 
 import { AutoResizeInput } from './ResizableInput';
@@ -220,8 +222,12 @@ function App() {
 
           <Flex direction="row" justify="left" align="center" mt="20">
             <Text fontSize="4xl">
-              <Text as="b">Definition: </Text>
-              {words[sliderValue].definition[0]}
+              <Text as="b">Definitions: </Text>
+              <UnorderedList>
+                {words[sliderValue].definition.map((def, index) => (
+                  <ListItem key={index}>{def}</ListItem>
+                ))}
+              </UnorderedList>
             </Text>
           </Flex>
         </Flex>
