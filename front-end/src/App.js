@@ -13,7 +13,7 @@ import {
   useClipboard,
 } from '@chakra-ui/react';
 
-import { AutoResizeTextarea } from './ResizableTextarea';
+import { AutoResizeInput } from './ResizableInput';
 
 const BASE_INFO = {
   irate: {
@@ -26,6 +26,18 @@ const BASE_INFO = {
   },
 };
 
+/* 
+  TODO:
+
+  1. Input text and click Find Adjectives many times.
+     Disable that ability somehow.
+     
+  2. Underline or highlight the adjectives.
+
+  3. Substitute the adjective for a newly selected one.
+
+*/
+
 function App() {
   const [sliderValue, setSliderValue] = useState(50);
   const [data, setData] = useState();
@@ -34,6 +46,7 @@ function App() {
   const [emoji, setEmoji] = useState();
   const [words, setWords] = useState();
   const [errorMsg, setErrorMsg] = useState();
+  const [currentValue, setCurrentValue] = useState('');
   const { onCopy, value, setValue, hasCopied } = useClipboard('');
 
   const labelStyles = {
@@ -73,11 +86,26 @@ function App() {
     setWords(BASE_INFO.irate.words);
   };
 
+  const styleInput = () => {
+    const [left, right] = value.split(base);
+    const underlinedAdj = (
+      <Text textDecoration="underline" textDecorationColor={color}>
+        {base}
+      </Text>
+    );
+    console.log(left, right, underlinedAdj);
+    return `${left}${underlinedAdj}${right}`;
+  };
+
+  const substituteInput = () => {};
+
   const request = e => {
     e.preventDefault();
     console.log('Request had been sent');
     if (value) {
+      setErrorMsg('');
       setScaleData();
+      setValue(styleInput());
     } else {
       setData(undefined);
       setBase('');
@@ -98,7 +126,7 @@ function App() {
       ml="auto"
       mr="auto"
     >
-      <AutoResizeTextarea
+      <AutoResizeInput
         value={value}
         onChange={e => setValue(e.target.value)}
         placeholder="Put your sentence here"
@@ -106,9 +134,23 @@ function App() {
         fontSize="5xl"
       />
       <Flex>
-        <Button colorScheme="teal" size="lg" mt="10" onClick={request}>
-          Find adjectives
-        </Button>
+        {currentValue === value ? (
+          <Button colorScheme="teal" size="lg" mt="10">
+            Find adjectives
+          </Button>
+        ) : (
+          <Button
+            colorScheme="teal"
+            size="lg"
+            mt="10"
+            onClick={e => {
+              request(e);
+              setCurrentValue(value);
+            }}
+          >
+            Find adjectives
+          </Button>
+        )}
 
         <Button colorScheme="teal" size="lg" ml="10" mt="10" onClick={onCopy}>
           {hasCopied ? 'Copied!' : 'Copy'}

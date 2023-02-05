@@ -1,10 +1,10 @@
-import { Textarea } from '@chakra-ui/react';
+import { Input } from '@chakra-ui/react';
 import ResizeTextarea from 'react-textarea-autosize';
 import React from 'react';
 
-export const AutoResizeTextarea = React.forwardRef((props, ref) => {
+export const AutoResizeInput = React.forwardRef((props, ref) => {
   return (
-    <Textarea
+    <Input
       minH="unset"
       overflow="hidden"
       w="100%"
