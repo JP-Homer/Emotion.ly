@@ -7,13 +7,11 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route("/",methods=['POST'])
-def handle_json(): # string from front end
+def handle_json():
      data = request.json
      string = data.get('sentence')
-     print(string)
-
-    # do something with string
      obj = functionsNeeded.get_adjective_info(string, 2)
+     return obj
 
-    # return json
-     return jsonify(obj)
+if __name__ == "__main__":
+    pass
