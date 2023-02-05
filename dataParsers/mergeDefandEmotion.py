@@ -1,6 +1,14 @@
 import definitionAPICaller
 import json
 
+'''
+calls free dictionary API emotionalWords.json and creates a JSON with
+every word from emotionalWords with it mapped to its name, intensity, emotion, and adjective definition
+
+if a value from emotionalWords can not be found by the dictionary API then it is 
+added to the "unadded" list at the start of the JSON
+'''
+
 
 filepath = "./jsonFiles/emotionalWords.json"
 

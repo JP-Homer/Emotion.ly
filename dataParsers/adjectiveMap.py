@@ -1,5 +1,9 @@
 import json
 from definitionAPICaller import get_dict_entry, is_adj
+'''
+copies emotionalWords.json and removes all non-adjectives
+'''
+
 
 filepath = "./jsonFiles/emotionalWords.json"
 

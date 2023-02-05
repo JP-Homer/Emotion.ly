@@ -1,5 +1,9 @@
 import json
 
+'''
+reads lexicon data and creates JSON with a word associated to its dominance value
+'''
+
 filepath = "./rawData/NRC-VAD-Lexicon.txt"
 
 file = open(filepath, "r")

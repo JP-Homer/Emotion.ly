@@ -1,5 +1,9 @@
 import json
 
+'''
+takes the rankedEmotionsSublist.json and associates each word with its information dictionary maintaining order
+'''
+
 sortedMap = {
 "anger": {},
 "sadness": {},

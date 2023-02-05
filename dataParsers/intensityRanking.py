@@ -1,4 +1,9 @@
 import json
+'''
+takes all of the emotional words from defEmotionMapSlimmed.json and 
+sorts them in their respective emotional catagories
+'''
+
 
 filepath = "./jsonFiles/defEmotionMapSlimmed.json"
 

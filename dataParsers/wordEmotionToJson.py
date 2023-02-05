@@ -1,4 +1,8 @@
 import json
+'''
+converts CSV file to a JSON of a dictionary with the six emotions 
+associated with a list of all of that emotion's words
+'''
 
 filepath = "./rawData/emotions.csv"
 

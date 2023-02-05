@@ -1,5 +1,9 @@
 import json
 
+'''
+takes the defEmotionMap.json and removes the unused words as well as non-adjectives
+'''
+
 filepath = "./jsonFiles/defEmotionMap.json"
 
 file = open(filepath, "r")
