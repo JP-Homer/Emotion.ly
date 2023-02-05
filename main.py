@@ -6,12 +6,16 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/",methods=['POST'])
+
+@app.route("/", methods=['POST'])
 def handle_json():
-     data = request.json
-     string = data.get('sentence')
-     obj = functionsNeeded.get_adjective_info(string, 2)
-     return obj
+    data = json.loads(request.data)
+    string = data['sentence']
+    print(string)
+    obj = functionsNeeded.get_adjective_info(str(string), 2)
+    print(obj)
+    return jsonify(obj)
+
 
 if __name__ == "__main__":
-    pass
+    app.run(host='localhost', port=8080, debug=True)

@@ -1,10 +1,11 @@
 import re
 import json
 
-#TODO
+# TODO
 # Receive the string from the front end
 
-def return_surrounding_words(index : int, emotion : str, radius : int) -> list[list, list]:
+
+def return_surrounding_words(index: int, emotion: str, radius: int):
     '''
     given an index and an emotion will return words that suround that index in ranking of that emotion
     '''
@@ -17,13 +18,11 @@ def return_surrounding_words(index : int, emotion : str, radius : int) -> list[l
         print(e)
     finally:
         file.close()
-    
+
     if (index - radius < 0):
         radius += -1*(index - radius)
     elif (index + radius > len(rankedData[emotion])):
         radius += index + radius - len(rankedData[emotion])
-
-
 
     leftwords = []
     for i in range(index - radius, index):
@@ -33,10 +32,11 @@ def return_surrounding_words(index : int, emotion : str, radius : int) -> list[l
     for i in range(index + 1, index + radius + 1):
         if (i < len(rankedData[emotion])):
             rightwords.append(rankedData[emotion][i])
-    
+
     return [leftwords, rightwords]
 
-def find_surroundings(word : str, radius : int) -> dict:
+
+def find_surroundings(word: str, radius: int) -> dict:
     '''
     given a word and radius will return the words of that emotion that surround it in ranking
     '''
@@ -49,43 +49,43 @@ def find_surroundings(word : str, radius : int) -> dict:
         print(e)
     finally:
         file.close()
-    
-    returnData = {word : {}}
+
+    returnData = {word: {}}
 
     for emotion in rankedData:
         if (word in rankedData[emotion]):
             wordData = rankedData[emotion][word]
-            
+
             returnData[word]["base"] = wordData["emotion"]
             returnData[word]["color"] = wordData["color"]
 
-            left_words, right_words = return_surrounding_words(wordData["index"], wordData["emotion"], radius)
+            left_words, right_words = return_surrounding_words(
+                wordData["index"], wordData["emotion"], radius)
             difference = wordData["index"]
             if (len(left_words) != 0):
                 difference = rankedData[emotion][left_words[0]]["index"]
-            
+
             returnData[word]["rank"] = wordData["index"] - difference
 
             returnData[word]["words"] = []
             for lword in left_words:
-                wordDict = {"word" : lword}
+                wordDict = {"word": lword}
                 wordDict["definition"] = rankedData[emotion][lword]["definitions"]
                 wordDict["rank"] = rankedData[emotion][lword]["index"] - difference
 
                 returnData[word]["words"].append(wordDict)
-            
+
             for rword in right_words:
-                wordDict = {"word" : rword}
+                wordDict = {"word": rword}
                 wordDict["definition"] = rankedData[emotion][rword]["definitions"]
                 wordDict["rank"] = rankedData[emotion][rword]["index"] - difference
 
                 returnData[word]["words"].append(wordDict)
-    
+
     return returnData
-            
 
 
-def parse_string(string : str) -> list:
+def parse_string(string: str) -> list:
     '''
     given sentance string returns all words in form of list, removes non letter words
     '''
@@ -93,13 +93,14 @@ def parse_string(string : str) -> list:
     stripList = []
 
     for word in listWords:
-        stripWord = re.sub(r'[^\w\s]','', word)
+        stripWord = re.sub(r'[^\w\s]', '', word)
         stripWord = stripWord.lower()
         stripList.append(stripWord)
 
     return stripList
 
-def find_adjective(sentance : str) ->list:
+
+def find_adjective(sentance: str) -> list:
     '''
     given sentance, removes words containing non-alphabetic characters and returns 
     all adjectives as a list
@@ -126,7 +127,7 @@ def find_adjective(sentance : str) ->list:
     return onlyAdj
 
 
-def get_adjective_info(sentance : str, radius : int) -> dict:
+def get_adjective_info(sentance: str, radius: int) -> dict:
     '''
     takes a sentance and returns the adjectives in it, each adjective has a
     dictionary with its attributes as well as the words of a similar intensity 
@@ -138,6 +139,7 @@ def get_adjective_info(sentance : str, radius : int) -> dict:
         for word in workingDict:
             return_values[word] = (workingDict[word])
     return return_values
+
 
 if __name__ == "__main__":
     # print(find_adjective("hello, there HOW'RE you you abhorrent man with a happy, ugly walk"))
