@@ -9,7 +9,7 @@ CORS(app)
 def handle_json(): # string from front end
      data = request.json
      string = data.get('sentence')
-     print(string)
+     return string
 
     # do something with string
     # return json
