@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Flex,
   Text,
@@ -15,43 +15,40 @@ import {
 
 import { AutoResizeInput } from './ResizableInput';
 
-const BASE_INFO = {
-  irate: {
-    base: 'anger',
-    color: 'teal',
-    words: {
-      irate: 'Feeling or showing extreme anger',
-      mad: 'Roused to anger',
-    },
-  },
-};
-
 const URL = 'https://emotionly.herokuapp.com';
 const LOCAL = 'localhost:8080';
 
 /* 
   TODO:
 
-  1. Input text and click Find Adjectives many times.
-     Disable that ability somehow.
-     
+  1. Make a component that works like an input but also
+     like a regural text box
+
   2. Underline or highlight the adjectives.
 
   3. Substitute the adjective for a newly selected one.
 
+  4. Map all of the definitions to a numbered list items.
+
 */
 
+const useCustomClipboard = () => {
+  const { onCopy, value, setValue, hasCopied } = useClipboard('');
+  const innerHTML = { __html: value };
+
+  return { onCopy, innerHTML, setValue, hasCopied };
+};
+
 function App() {
-  const [sliderValue, setSliderValue] = useState(50);
-  const [defaultRank, setDefaultRank] = useState();
-  const [word, setWord] = useState();
+  const [sliderValue, setSliderValue] = useState();
+  const [word, setWord] = useState('mad');
   const [base, setBase] = useState();
   const [color, setColor] = useState();
   const [emoji, setEmoji] = useState();
   const [words, setWords] = useState();
   const [errorMsg, setErrorMsg] = useState();
   const [currentValue, setCurrentValue] = useState('');
-  const { onCopy, value, setValue, hasCopied } = useClipboard('');
+  const { onCopy, innerHTML, setValue, hasCopied } = useCustomClipboard();
 
   const getData = async () => {
     const response = await fetch(URL, {
@@ -59,13 +56,13 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ sentence: value }),
+      body: JSON.stringify({ sentence: innerHTML.__html }),
     });
 
     if (response.ok) {
       const finishedData = await response.json();
-      console.log(finishedData.mad);
-      return finishedData.mad;
+      console.log(finishedData);
+      return finishedData;
     } else {
       setErrorMsg(
         "The adjective in the sentence isn't in our database. Please, try another sentence."
@@ -84,7 +81,7 @@ function App() {
     setBase(newData.base);
     setColor(newData.color);
     setWords(newData.words);
-    setDefaultRank(newData.rank);
+    setSliderValue(newData.rank);
     setWord(newData.word);
 
     // eslint-disable-next-line default-case
@@ -111,14 +108,14 @@ function App() {
   };
 
   const styleInput = () => {
-    const [left, right] = value.split(base);
+    const [left, right] = innerHTML.__html.split(word);
     const underlinedAdj = (
       <Text textDecoration="underline" textDecorationColor={color}>
-        {base}
+        {word}
       </Text>
     );
     console.log(left, right, underlinedAdj);
-    return `${left}${underlinedAdj.props.children}${right}`;
+    return `${left}${underlinedAdj}${right}`;
   };
 
   const substituteInput = () => {};
@@ -126,10 +123,8 @@ function App() {
   const request = async e => {
     setErrorMsg('');
     const newData = await getData();
-    console.log(newData);
-    setScaleData(newData);
+    setScaleData(newData[0]);
     e.preventDefault();
-    console.log('Request had been sent');
   };
 
   return (
@@ -142,15 +137,9 @@ function App() {
       ml="auto"
       mr="auto"
     >
-      <AutoResizeInput
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        placeholder="Put your sentence here"
-        size="lg"
-        fontSize="5xl"
-      />
+      <AutoResizeInput setValue={setValue} />
       <Flex>
-        {currentValue === value ? (
+        {currentValue === innerHTML.__html ? (
           <Button colorScheme="teal" size="lg" mt="10" isDisabled>
             Find adjectives
           </Button>
@@ -162,7 +151,7 @@ function App() {
             onClick={e => {
               request(e);
               setValue(styleInput());
-              setCurrentValue(value);
+              setCurrentValue(innerHTML.__html);
             }}
           >
             Find adjectives
@@ -180,8 +169,9 @@ function App() {
             aria-label="slider-ex-6"
             onChange={val => setSliderValue(val)}
             colorScheme={color}
-            min={1}
-            max={19}
+            defaultValue={sliderValue}
+            min={0}
+            max={20}
             step={1}
           >
             <SliderMark value={1} {...labelStyles}>
@@ -190,7 +180,7 @@ function App() {
             <SliderMark value={10} {...labelStyles}>
               Your Word
             </SliderMark>
-            <SliderMark value={19} {...labelStyles}>
+            <SliderMark value={16} {...labelStyles}>
               More Intense
             </SliderMark>
             <SliderMark
@@ -198,11 +188,13 @@ function App() {
               textAlign="center"
               bg={color}
               color="white"
-              mt="-12"
-              ml="-6"
-              w="12"
+              mt="-16"
+              ml="-12"
+              px="5"
+              py="2"
+              borderRadius={6}
             >
-              {sliderValue}%
+              {words[sliderValue].word}
             </SliderMark>
             <SliderTrack>
               <SliderFilledTrack />
@@ -212,7 +204,6 @@ function App() {
               right={-10}
               boxSize={10}
               borderColor={color}
-              ml={-5}
             >
               <Text color={color}>{emoji}</Text>
             </SliderThumb>
@@ -221,7 +212,7 @@ function App() {
           <Flex direction="row" justify="left" align="center" mt="20">
             <Text fontSize="4xl">
               <Text as="b">Definition: </Text>
-              {BASE_INFO.irate.words.irate}
+              {words[sliderValue].definition[0]}
             </Text>
           </Flex>
         </Flex>
