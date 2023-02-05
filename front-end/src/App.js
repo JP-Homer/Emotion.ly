@@ -14,9 +14,8 @@ import {
   useClipboard,
   UnorderedList,
   ListItem,
+  Box,
 } from '@chakra-ui/react';
-
-import { AutoResizeInput } from './ResizableInput';
 
 const URL = 'https://emotionly.herokuapp.com';
 const LOCAL = 'localhost:8080';
@@ -42,7 +41,7 @@ const useCustomClipboard = () => {
 
 function App() {
   const [sliderValue, setSliderValue] = useState();
-  const [word, setWord] = useState('mad');
+  const [word, setWord] = useState();
   const [base, setBase] = useState();
   const [color, setColor] = useState();
   const [emoji, setEmoji] = useState();
@@ -128,6 +127,48 @@ function App() {
     e.preventDefault();
   };
 
+  const AutoResizeInput = () => {
+    const ref = useRef(null);
+
+    const setCaretToEnd = () => {
+      const el = ref.current;
+      if (!el) return;
+      el.focus();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    };
+
+    useEffect(() => {
+      setCaretToEnd();
+    }, [ref]);
+
+    return (
+      <Box
+        dangerouslySetInnerHTML={innerHTML}
+        minH="unset"
+        overflow="hidden"
+        w="100%"
+        resize="none"
+        ref={ref}
+        minRows={1}
+        contentEditable="true"
+        display="inline-block"
+        className="editable"
+        onInput={e => {
+          setCaretToEnd();
+          setValue(e.target.innerHTML);
+        }}
+        placeholder="Put your sentence here"
+        size="lg"
+        fontSize="5xl"
+      />
+    );
+  };
+
   return (
     <Flex
       direction="column"
@@ -138,10 +179,7 @@ function App() {
       ml="auto"
       mr="auto"
     >
-      <AutoResizeInput
-        dangerouslySetInnerHTML={innerHTML}
-        setValue={setValue}
-      />
+      <AutoResizeInput />
       <Flex>
         {currentValue === innerHTML.__html ? (
           <Button colorScheme="teal" size="lg" mt="10" isDisabled>
@@ -154,7 +192,7 @@ function App() {
             mt="10"
             onClick={e => {
               request(e);
-              setValue(styleInput());
+              setValue(innerHTML.__html);
               setCurrentValue(innerHTML.__html);
             }}
           >
