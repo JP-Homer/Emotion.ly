@@ -107,15 +107,17 @@ function App() {
             aria-label="slider-ex-6"
             onChange={val => setSliderValue(val)}
             colorScheme={color}
-            step="5"
+            min={1}
+            max={19}
+            step={1}
           >
-            <SliderMark value={5} {...labelStyles}>
+            <SliderMark value={1} {...labelStyles}>
               Less Intense
             </SliderMark>
-            <SliderMark value={40} {...labelStyles}>
+            <SliderMark value={10} {...labelStyles}>
               Your Word
             </SliderMark>
-            <SliderMark value={75} {...labelStyles}>
+            <SliderMark value={19} {...labelStyles}>
               More Intense
             </SliderMark>
             <SliderMark
