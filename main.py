@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import functionsNeeded
 import json
 from flask_cors import CORS
 
@@ -9,7 +10,8 @@ CORS(app)
 def handle_json(): # string from front end
      data = request.json
      string = data.get('sentence')
-     print(string)
+     obj = functionsNeeded.get_adjective_info(string, 2)
+     return jsonify(obj)
 
     # do something with string
     # return json
